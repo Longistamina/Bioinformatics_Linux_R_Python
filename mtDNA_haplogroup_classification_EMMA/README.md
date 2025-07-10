@@ -5,7 +5,7 @@
 
 [2. Variant/Allele count by haplogroup (download the "Allele Counts by Haplogroup in our Current Full-Length GB Set")](https://www.mitomap.org/foswiki/bin/view/MITOMAP/Mitobank)
 
-[3. Haplogroup motifs (Download the "Click here for additional data file." and check sheet "Table S2")](https://pmc.ncbi.nlm.nih.gov/articles/PMC8198973/)
+[3. Haplogroup motifs (download the "Click here for additional data file." and check sheet "Table S2")](https://pmc.ncbi.nlm.nih.gov/articles/PMC8198973/)
 
 
 ## <span style = 'color:#66c2a5'> Repo structure: ##
