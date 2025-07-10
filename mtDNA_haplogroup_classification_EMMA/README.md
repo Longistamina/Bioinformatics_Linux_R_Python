@@ -3,9 +3,9 @@
 ## <span style = 'color:#66c2a5'> Reference materials: ##
 [1. Algorithm - Fluctuation Rate - Cost Value (EMMA)](https://pmc.ncbi.nlm.nih.gov/articles/PMC3819997/)
 
-[2. Variant/Allele count by haplogroup](https://www.mitomap.org/cgi-bin/genbank_haplogroup_count.cgi)
+[2. Variant/Allele count by haplogroup (download the "Allele Counts by Haplogroup in our Current Full-Length GB Set")](https://www.mitomap.org/foswiki/bin/view/MITOMAP/Mitobank)
 
-[3. Haplogroup motifs (sheet "Table S2")](https://www.mdpi.com/article/10.3390/ijms22115747/s1)
+[3. Haplogroup motifs (Download the "Click here for additional data file." and check sheet "Table S2")](https://pmc.ncbi.nlm.nih.gov/articles/PMC8198973/)
 
 
 ## <span style = 'color:#66c2a5'> Repo structure: ##
