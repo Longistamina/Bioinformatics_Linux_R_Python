@@ -49,7 +49,7 @@ def parse_args():
     parser = ArgumentParser(description="Generate JSON files from variant data")
     parser.add_argument("-i", "--input", required=True, help="Path to input file fluctuation_rate.json")
     parser.add_argument("-o", "--output", required=True, help="Path to output file cost_value.json")
-    parser.add_argument("-c", "--cores", required=False, help="The number of CPU cores to be used for parallel computing, default is 2. (Example: set -c 8 means using 8 cores to process 8 different samples at a time)")
+    parser.add_argument("-c", "--cores", type=int, default=2, required=False, help="The number of CPU cores to be used for parallel computing, default is 2. (Example: set -c 8 means using 8 cores to process 8 different samples at a time)")
     return parser.parse_args()
 
 def main():

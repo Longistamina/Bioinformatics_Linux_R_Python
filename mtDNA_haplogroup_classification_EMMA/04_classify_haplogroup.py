@@ -180,7 +180,7 @@ def parse_args():
     parser.add_argument("-i", "--input", required=True, help="Path to input directory containing sample files (input_dir/standardized)")
     parser.add_argument("-o", "--output", required=True, help="Path to output directory (classify_dir/)")
     parser.add_argument("-r", "--reference", required=True, help="Path to reference directory containing cost_value.json file (ref_dir/)")
-    parser.add_argument("-c", "--cores", required=False, help="The number of CPU cores to be used for parallel computing, default is 2. (Example: set -c 8 means using 8 cores to process 8 different samples at a time)")
+    parser.add_argument("-c", "--cores", type=int, default=2, required=False, help="The number of CPU cores to be used for parallel computing, default is 2. (Example: set -c 8 means using 8 cores to process 8 different samples at a time)")
     return parser.parse_args()
 
 def main():
