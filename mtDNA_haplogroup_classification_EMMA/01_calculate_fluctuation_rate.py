@@ -2,7 +2,6 @@ from siuba import *
 import numpy as np
 import pandas as pd
 import json
-import os
 import logging
 from argparse import ArgumentParser
 from multiprocessing import Pool
