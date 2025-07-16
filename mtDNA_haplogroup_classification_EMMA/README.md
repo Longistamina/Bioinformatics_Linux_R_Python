@@ -593,10 +593,10 @@ This module aims to harmonise the variant profile of the sample with the motif p
 # Run module from terminal
 python3 05_harmonise_variant.py -s input_dir/standardized -cls classify_dir/ -m ref_dir/standardized_haplogroup_motif.json -hmn harmonise_dir/ -c 10  
   
-# -s   ~ Input 1: variant profile of each sample
-# -cls ~ Input 2: haplogroup classification result of each sample
-# -m   ~ Input 3: haplogroup motif profile
-# -hmn ~ Output: harmonised profile of each sample 
+# -s   ~ Input 1: Path to sample directory containing sample JSON files (input_dir/standardized)
+# -cls ~ Input 2: Path to classify directory (classify_dir/)
+# -m   ~ Input 3: Path to standardized haplogroup motif file (ref_dir/standardized_haplogroup_motif.json)
+# -hmn ~ Output:  Path to output harmonise directory (harmonise_dir/) 
   
 # Display help
 python3 05_harmonise_variant.py -h
