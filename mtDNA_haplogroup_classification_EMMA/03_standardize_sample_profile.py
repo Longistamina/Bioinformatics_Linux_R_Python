@@ -299,7 +299,7 @@ class InputStandardizer():
 
 def parse_args():
     """Parse command line arguments."""
-    parser = ArgumentParser(description="Generate JSON files from variant data")
+    parser = ArgumentParser(description="Generate standardised JSON files from variant data")
     parser.add_argument("-i", "--input", required=True, help="Path to input directory")
     parser.add_argument("-o", "--output", required=True, help="Path to output directory")
     parser.add_argument("-r", "--reference", required=True, help="Path to reference FASTA file")
@@ -362,3 +362,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+# python3 03_standardize_sample_profile.py -i input_dir/ -o input_dir/standardized -r ref_dir/rcrs.fasta -c 10

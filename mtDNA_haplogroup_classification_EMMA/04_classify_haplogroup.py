@@ -1,13 +1,13 @@
 import math
 import numpy as np
+import pandas as pd
 import json
 import os
-import logging
+from loguru import logger
 from argparse import ArgumentParser
 import shutil
+import re
 from multiprocessing import Pool
-
-logger = logging.getLogger(__name__)
 
 IUPAC_CODE = {
     "A": ("A",),
@@ -69,13 +69,13 @@ class HaplogroupClassifier:
         return self.cost_value
     
 
-    def load_samples_profile (self, json_input_file):
+    def _load_sample_profile (self, json_sample_file):
         '''
         Extract each sample from the .json file.
         Then, convert all its variant profile into SAM format.
         And then cast them into a dataframe.
         '''
-        sample_profile_path = os.path.join(self.input_dir, json_input_file)
+        sample_profile_path = os.path.join(self.input_dir, json_sample_file)
         with open(sample_profile_path, "r") as json_file:
             dict_sample_profile = json.load(json_file)
         
@@ -129,30 +129,30 @@ class HaplogroupClassifier:
         return cost_value
 
         
-    def classify_haplogroup(self, sample):
+    def classify_haplogroup(self, json_sample_file):
         haplogroup_result = dict()
-        haplogroup_result[sample] = dict()
+        dict_sample_profile = self._load_sample_profile(json_sample_file)
 
         for haplogroup in self.haplogroup_motif.keys():
             cost_sum = 0
 
             haplogroup_pos_set = set(self.haplogroup_motif[haplogroup].keys())
-            sample_pos_set = set(self.dict_samples_profile[sample].keys())
+            sample_pos_set = set(dict_sample_profile.keys())
 
             intersect_pos = haplogroup_pos_set & sample_pos_set # mustation that exists in both sample and haplogroup
             #diff_sample_pos = sample_pos_set - haplogroup_pos_set # mutation that sample has but haplogroup does not
 
-            for pos in self.dict_samples_profile[sample].keys(): # mustation that exists in both sample and haplogroup
+            for pos in dict_sample_profile.keys(): # mustation that exists in both sample and haplogroup
 
                 if (pos == "ranges") or (str(math.floor(float(pos))) in Disregard_InDels):
                     continue
 
-                sample_base = self.dict_samples_profile[sample][pos].get('alt')
+                sample_base = dict_sample_profile[pos].get('alt')
 
                 if pos in intersect_pos:
                     motif_base = self.haplogroup_motif[haplogroup][pos].get('alt')
                 else:
-                    motif_base = self.dict_samples_profile[sample][pos].get('ref')
+                    motif_base = dict_sample_profile[pos].get('ref')
                     
                 if (set(IUPAC_CODE.get(motif_base)) >= set(IUPAC_CODE.get(sample_base))): # check for heteroplasmy in motif
                     continue                      
@@ -161,11 +161,13 @@ class HaplogroupClassifier:
                 else:
                     cost_sum += HaplogroupClassifier.assign_new_cost(sample_base, motif_base)
 
-            haplogroup_result[sample][haplogroup] = cost_sum
+            haplogroup_result[haplogroup] = cost_sum
         
-        haplogroup_result[sample] = dict(sorted(haplogroup_result[sample].items(), key = lambda x: x[1])) # sort the dict ascending
+        haplogroup_result = dict(sorted(haplogroup_result.items(), key = lambda x: x[1])) # sort the dict ascending
 
-        return haplogroup_result
+        classify_path = os.path.join(self.output_dir, json_sample_file)
+        with open(classify_path, "w") as json_file:
+            json.dump(haplogroup_result, json_file, indent = 4)
         
 
 #-------------------------------------------------------#                
@@ -188,44 +190,33 @@ def main():
     #     ref_dir = "ref_dir/", 
     #     cores = 14
     # )
-    args = parse_args()
-    classifier = HaplogroupClassifier(
-        input_dir = args.input, 
-        output_dir = args.output, 
-        ref_dir = args.reference, 
-        cores = args.cores
-    )
-    
     try:
+        args = parse_args()
+        classifier = HaplogroupClassifier(
+            input_dir = args.input, 
+            output_dir = args.output, 
+            ref_dir = args.reference, 
+            cores = args.cores
+        )
         classifier.load_haplogroup_motif()
         classifier.load_cost_value()
 
-        for json_file in os.listdir(classifier.input_dir):
-            sample_name = json_file.replace(".json", "")
-            classifier.dict_samples_profile[sample_name] = dict()
-            classifier.dict_samples_profile[sample_name].update(classifier.load_samples_profile(json_file))
-
         #classifier.classify_haplogroup("242749")
+        
         ###### classify ######
-        arg_list = [(sample,) for sample in classifier.dict_samples_profile.keys()]
+        arg_list = [(json_sample_file,) for json_sample_file in os.listdir(classifier.input_dir)]
         
         with Pool(processes = classifier.cores) as pool:
-            result_list = pool.starmap(func = classifier.classify_haplogroup, iterable = arg_list)
-        
-        haplogroup_result_dict = dict()
-        for sample_haplogroup in result_list:
-            haplogroup_result_dict.update(sample_haplogroup)
-        
-        for sample, haplgroup_data in haplogroup_result_dict.items():
-            json_path = os.path.join(classifier.output_dir, f"{sample}.json")
-            with open(json_path, "w") as json_file:
-                json.dump(haplgroup_data, json_file, indent = 4)
+            pool.starmap(func = classifier.classify_haplogroup, iterable = arg_list)
         ###### classify ######
         
         logger.info("All samples processed successfully") 
     
     except Exception as e:
-        logger.error(f"Error in main {e}")
+        logger.error(e)
 
 if __name__ == '__main__':
     main()
+
+
+# python3 python3 04_classify_haplogroup.py -i input_dir/standardized -o classify_dir/ -r ref_dir/ -c 10

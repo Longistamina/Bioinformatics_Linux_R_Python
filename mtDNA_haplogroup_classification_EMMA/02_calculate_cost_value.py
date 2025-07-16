@@ -1,11 +1,9 @@
 from siuba import *
 import numpy as np
 import json
-import logging
+from loguru import logger
 from argparse import ArgumentParser
 from multiprocessing import Pool
-
-logger = logging.getLogger(__name__)
 
 class CostValueCalculator:
 
@@ -46,7 +44,7 @@ class CostValueCalculator:
 #-------------------------------------------------------#
 def parse_args():
     """Parse command line arguments."""
-    parser = ArgumentParser(description="Generate JSON files from variant data")
+    parser = ArgumentParser(description="Calculate cost value from given fluctuation rate data")
     parser.add_argument("-i", "--input", required=True, help="Path to input file fluctuation_rate.json")
     parser.add_argument("-o", "--output", required=True, help="Path to output file cost_value.json")
     parser.add_argument("-c", "--cores", type=int, default=2, required=False, help="The number of CPU cores to be used for parallel computing, default is 2. (Example: set -c 8 means using 8 cores to process 8 different samples at a time)")
@@ -83,9 +81,11 @@ def main():
         logger.info("All positions processed successfully")
     
     except Exception as e:
-        logger.error(f"Error in main {e}")
+        logger.error(e)
 
 
 if __name__ == '__main__':
     main()
 
+
+# python3 02_calculate_cost_value.py -i ref_dir/fluctuation_rate.json -o ref_dir/cost_value.json -c 10
