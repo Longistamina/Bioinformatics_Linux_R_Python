@@ -6,7 +6,8 @@
 [2. Variant/Allele count by haplogroup (download the "Allele Counts by Haplogroup in our Current Full-Length GB Set")](https://www.mitomap.org/foswiki/bin/view/MITOMAP/Mitobank)
 
 [3. Haplogroup motifs (download the "Click here for additional data file." and check sheet "Table S2")](https://pmc.ncbi.nlm.nih.gov/articles/PMC8198973/)
-
+  
+[4. Variant profile harmonisation principle (read this pdf file)](https://raw.githubusercontent.com/gmitirol/empophub/master/Roeck_Berlin2010.pdf)  
 
 ## <span style = 'color:#66c2a5'> Repo structure: ##
 mtdna-variant-harmonisation/  
@@ -19,7 +20,8 @@ mtdna-variant-harmonisation/
 │   ├── 01_calculate_fluctuation_rate.py        
 │   ├── 02_calculate_cost_value.py           
 │   ├── 03_standardize_sample_profile.py               
-│   └── 04_classify_haplogroup.py                
+│   ├── 04_classify_haplogroup.py         
+│   └── 05_harmonise_variant.py                
 │  
 ├── 🔧 UTILITY SCRIPTS:  
 │   ├── check_with_EMPOP_Haplogrep.py           
@@ -580,5 +582,24 @@ python3 04_classify_haplogroup.py -h
   
 ***The less score the haplogroup has, the more probable that haplogroup is.***  
 ***The lowest score = The most probable haplogroup***
+
+
+### <span style = 'color:#c2a5cf'> 3.7. module 05_harmonise_variant.py  
+This module aims to harmonise the variant profile of the sample with the motif profile of the haplogroup to produce consistent output.  
+  
+[Read this pdf slide for the harmonisation principle.](https://raw.githubusercontent.com/gmitirol/empophub/master/Roeck_Berlin2010.pdf)  
+  
+```
+# Run module from terminal
+python3 05_harmonise_variant.py -s input_dir/standardized -cls classify_dir/ -m ref_dir/standardized_haplogroup_motif.json -hmn harmonise_dir/ -c 10  
+  
+# -s ~   Input 1: variant profile of each sample
+# -cls ~ Input 2: haplogroup classification result of each sample
+# -m ~   Input 3: haplogroup motif profile
+# -hmn ~ Output: harmonised profile of each sample 
+  
+# Display help
+python3 05_harmonise_variant.py -h
+```  
   
 # <span style = 'color:yellow'> --- END OF DOCUMENT --- #
